@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      #inp {
+        height: 30px;
+        width: 200px;
+        font-size: 20px;
+      }
+      #btn {
+        height: 30px;
+        width: 100px;
+        font-size: 20px;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="inp" placeholder="todo" type="text" />
+    <button id="btn" onclick="todo(event)">submit</button>
+    <p id="count1"></p>
+  </body>
+  <script>
+    function tasks(n) {
+      this.name = n;
+      this.date = new Date().getDate(); //getday//get time
+      this.status = false;
+    }
+    // tasks.forEach(function (el) {
+    //   console.log(el);
+    // });
+    var count = 0;
+
+    function todo(e) {
+      e.preventDefault();
+      var inp = document.getElementById("inp").value;
+
+      var x = new tasks(inp);
+
+      count++;
+      var name_list = document.createElement("div");
+      name_list.id = count;
+
+      var name = document.createElement("p");
+      name.textContent = x.name;
+
+      var date = document.createElement("p");
+      date.textContent = x.date;
+      var status = document.createElement("p");
+      var done = document.createElement("button");
+      done.id = "btn1";
+      done.innerText = "Done";
+      var remove = document.createElement("button");
+      remove.id = "btn1";
+      remove.innerText = "Remove";
+      done.addEventListener("click", function () {
+        var div = document.getElementById(count);
+        div.firstChild.style.color = "green";
+        div.firstChild.style.textDecoration = "line-through";
+      });
+      remove.addEventListener("click", function () {
+        var div = document.getElementById(count);
+        div.remove();
+        var add = document.getElementById("count1");
+        add.innerText = count--;
+      });
+
+      status.textContent = x.status;
+
+      status.addEventListener("click", function (e) {
+        toggle(e);
+      });
+
+      var add = document.getElementById("count1");
+
+      if (!add.innerText) {
+        add.innerText = 0;
+      } else {
+        add.innerText = count;
+      }
+
+      name_list.append(name, date, status, done, remove);
+      document.body.append(name_list);
+    }
+
+    function toggle(e) {
+      //   console.log(status);
+      if (e.target.innerText === "true") {
+        e.target.innerText = "false";
+      } else if (e.target.innerText === "false") {
+        e.target.innerText = "true";
+      }
+    }
+  </script>
+</html>
