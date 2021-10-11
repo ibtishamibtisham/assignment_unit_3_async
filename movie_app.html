@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #center {
+        background-color: tomato;
+        height: 200px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #inp {
+        height: 50px;
+        width: 300px;
+        font-size: 18px;
+        text-align: center;
+        border-radius: 5px;
+      }
+      #btn {
+        height: 40px;
+        width: 120px;
+        margin-left: 5px;
+        font-size: 20px;
+        background: grey;
+        border-radius: 5px;
+      }
+      #cont {
+        margin-top: 5px;
+        background-color: turquoise;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        justify-content: space-evenly;
+        column-gap: 20px;
+      }
+      p {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="center">
+      <input id="inp" type="text" placeholder="type movie name" />
+      <button id="btn" onclick="get_movies()">Search</button>
+    </div>
+    <div id="cont"></div>
+  </body>
+  <script>
+    let apiKey = "14f97813";
+    async function get_movies() {
+      let movie_name = document.getElementById("inp").value;
+      let res = await fetch(
+        `https://www.omdbapi.com/?t=${movie_name}&apikey=${apiKey}`
+      );
+      let data = await res.json();
+      //   console.log(data);
+      get_me(data);
+    }
+
+    // fetch(`https://www.omdbapi.com/?t=${movie_name}&apikey=${apiKey}`)
+    //   .then(function (res) {
+    //     return res.json();
+    //     // console.log(res);
+    //   })
+    //   .then(function (res) {
+    //     get_movies(res);
+    //   });
+    let cont = document.getElementById("cont");
+    function get_me(movies) {
+      let div = document.createElement("div");
+      let image = document.createElement("img");
+      image.src = movies.Poster;
+      let title = document.createElement("p");
+      title.innerText = movies.Title;
+      let date = document.createElement("p");
+      date.innerText = movies.Released;
+      let ratings = document.createElement("p");
+      ratings.innerText = movies.imdbRating;
+      let imdb = document.createElement("p");
+      div.append(image, title, date, ratings, imdb);
+      cont.append(div);
+      // console.log(title.innerText);
+      if (movies.Response == "False") {
+        window.location.href =
+          "https://tse1.mm.bing.net/th?id=OIP.agY2lDzjtdO_3C6gBnG9_wHaP8&pid=Api&rs=1&c=1&qlt=95&w=54&h=116";
+      }
+      if (ratings.innerText > 8.5) {
+        imdb.innerText = "A Must Watch";
+        imdb.style.color = "red";
+        image.style.fontSize = "x-large";
+      }
+    }
+  </script>
+</html>
