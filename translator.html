@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #cont {
+        height: 700px;
+        width: 800px;
+        margin: auto;
+      }
+      textarea {
+        height: 250px;
+        width: 350px;
+      }
+      #nav {
+        width: 715px;
+        background-color: rgb(206, 216, 221);
+        text-align: center;
+      }
+      textarea {
+        margin-top: 20px;
+        margin-right: 10px;
+        font-size: 20px;
+      }
+      button {
+        width: 200px;
+        height: 70px;
+        border-radius: 5px;
+        border: 1px solid black;
+        margin-left: 33%;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cont">
+      <div id="nav">
+        <h1>Choose Any Language</h1>
+        <select id="select" onclick="recievedata()"></select>
+      </div>
+      <textarea id="type"></textarea>
+      <textarea id="translate"></textarea>
+
+      <button onclick="getdata()">translate</button>
+    </div>
+  </body>
+</html>
+<script>
+  async function getdata() {
+    var e = document.getElementById("select"); //select tag id
+    var value = e.options[e.selectedIndex].value; //dom dropdown
+    // console.log(value);
+    console.log(e.selectedIndex);
+    const res = await fetch("https://libretranslate.de/translate", {
+      method: "POST",
+      body: JSON.stringify({
+        q: document.getElementById("type").value,
+        source: "en",
+        target: value,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    let data = await res.json();
+    // console.log(data);
+    let text = document.getElementById("translate");
+    text.textContent = data.translatedText;
+  }
+  async function recievedata() {
+    let select = document.getElementById("select");
+    let res = await fetch("https://libretranslate.de/languages");
+    let data = await res.json();
+    // console.log(data);
+    data.forEach(({ code, name }) => {
+      let op = document.createElement("option");
+      op.innerText = name;
+      op.value = code;
+      select.append(op);
+    });
+  }
+</script>
