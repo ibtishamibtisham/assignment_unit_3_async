@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>put Request</h1>
+    <div id="put_data">
+      <input type="text" placeholder="id" id="id" /><br />
+      <input type="text" placeholder="name" id="name" /><br />
+      <input type="text" placeholder="price" id="price" /><br />
+      <input type="text" placeholder="status" id="status" /><br />
+      <button id="add" onclick="post_data()">AddMe</button>
+    </div>
+
+    <div id="putme">
+      <h1>put update or Alter</h1>
+      <input type="text" placeholder="id" id="update" /><br />
+      <input type="text" placeholder="status" id="status_id" />
+      <input type="text" placeholder="height" id="height" />
+      <button id="update1" onclick="put_data()">updateMe</button>
+    </div>
+    <div id="delete_data">
+      <h1>delete data</h1>
+      <input type="text" placeholder="id" id="id1" />
+      <button id="delete" onclick="delete_data()">deleteME</button>
+    </div>
+  </body>
+</html>
+<script>
+  //get request
+
+  async function get_data() {
+    try {
+      let res = await fetch("http://localhost:5000/api/users");
+      let data = await res.json();
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  //post request
+  async function post_data() {
+    let data = {
+      id: document.getElementById("id").value,
+      name: document.getElementById("name").value,
+      age: document.getElementById("price").value,
+      active: document.getElementById("status").value,
+    };
+
+    try {
+      let response = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  //put request
+
+  async function put_data() {
+    var id = document.getElementById("update").value;
+    let data = {
+      id: id,
+      active: document.getElementById("status_id").value,
+      height: document.getElementById("height").value,
+    };
+    // console.log(data.id);
+
+    try {
+      let response = await fetch(`http://localhost:5000/api/users/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let d = await response.json();
+      console.log(d);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async function delete_data() {
+    let id = document.getElementById("id1").value;
+    try {
+      let response = await fetch(`http://localhost:5000/api/users/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  get_data();
+</script>
