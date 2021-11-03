@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #cont {
+        background-color: rgb(177, 130, 59);
+        height: 100px;
+        border: 1px solid black;
+      }
+      #movie {
+        background-color: rgb(241, 184, 184);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        justify-content: space-evenly;
+        row-gap: 20px;
+      }
+      #data_cont {
+        width: 400px;
+        height: 80px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+      }
+      #inp {
+        height: 40px;
+        width: 250px;
+        margin-top: 10px;
+      }
+      #btn {
+        height: 40px;
+        width: 75px;
+        margin-top: 13px;
+        margin-left: 5px;
+        border-radius: 3px;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="cont">
+        <div id="data_cont">
+          <input id="inp" placeholder="Search here" />
+          <button id="btn" onclick="showMovie()">Click</button>
+          <p class="name" style="margin-left: 300px; width: 600px"></p>
+        </div>
+      </div>
+    </header>
+    <div id="movie"></div>
+  </body>
+</html>
+<script>
+  //const=>es6
+  const apikey = "AIzaSyB7j5BXD7t_WKgZdDRAI3XNLagkKUeZcAE";
+
+  async function showMovie() {
+    var inp = document.getElementById("inp").value;
+    try {
+      let res = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${inp}&key=${apikey}&maxResults=20`
+      );
+      //res holds response
+      //res.json(); data is an promisss//pending
+      let data = await res.json();
+      // console.log(data.items); //array of objects
+      show_videos(data.items);
+      //   console.log(data.snippet);
+    } catch (e) {
+      console.log(e, "erooooorrrrr");
+    }
+  }
+  let div1 = document.getElementById("movie");
+
+  function show_videos(movies) {
+    div1.innerHTML = null;
+    //arrow function
+    movies.forEach(
+      ({ id: { videoId }, snippet: { title, description, channelTitle } }) => {
+        // div1.innerHTML = null;
+        let div_main_2 = document.createElement("div");
+        let div = document.createElement("div");
+        let desc_div = document.createElement("div");
+        desc_div.style.border = "0.5px blue solid";
+        desc_div.style.width = "400px";
+        desc_div.style.overflow = "hidden";
+        div.innerHTML = `<iframe width="400" height="300" src="https://www.youtube.com/embed/${videoId}"></iframe>`;
+        let title1 = document.createElement("p");
+        title1.style.color = "green";
+
+        title1.innerText = title;
+
+        // let description1 = document.createElement("p");
+
+        // description1.innerText = description;
+        let channelTitle1 = document.createElement("p");
+
+        channelTitle1.innerText = channelTitle;
+        // console.log(description1);
+        desc_div.append(channelTitle1, title1);
+        div_main_2.append(div, desc_div);
+
+        div1.append(div_main_2);
+        //   console.log(title);
+        // console.log(channelTitle);
+      }
+    );
+  }
+  async function showMovies() {
+    try {
+      // GET https://youtube.googleapis.com/youtube/v3/videos?part=snippet&maxResults=20&regionCode=India&videoCategoryId=popular&key=[YOUR_API_KEY] HTTP/1.1
+
+      let res = await fetch(
+        "https://youtube.googleapis.com/youtube/v3/videos?chart=mostPopular&part=snippet&key=AIzaSyB7j5BXD7t_WKgZdDRAI3XNLagkKUeZcAE&regionCode=IN&maxResults=20"
+      );
+      //res holds response
+      //res.json(); data is an promisss//pending
+      //
+
+      let data = await res.json();
+      console.log(data);
+      let val = data.items;
+      console.log(val);
+      val.forEach(({ snippet: { channelTitle }, id }) => {
+        // console.log(channelTitle, id);
+        let div = document.createElement("div");
+        div.innerHTML = `<iframe width="400" height="300" src="https://www.youtube.com/embed/${id}"></iframe>`;
+        div1.append(div);
+      });
+      // data.forEach();
+      // console.log(data); //array of objects
+
+      //   console.log(data.snippet);
+    } catch (e) {
+      // console.log(e, "erooooorrrrr");
+
+      // let div = document.createElement("div");
+
+      let img = document.createElement("img");
+      img.src = "https://i.giphy.com/media/8L0Pky6C83SzkzU55a/giphy.webp";
+      div1.append(img, e);
+      // error.append(div);
+
+      //console.log(error)
+    }
+  }
+  showMovies();
+  let data = JSON.parse(localStorage.getItem("data"));
+
+  let h1 = document.querySelector(".name");
+  h1.innerText = `welcome${data}`;
+</script>
