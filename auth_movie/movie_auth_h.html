@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        input{
+            width:200px;
+
+        }#movies{
+            height: 200px;
+            width: 200px;
+            border: 1px solid black;
+            ;
+            overflow: scroll;
+            border-top: none;
+        }
+    </style>
+  </head>
+  <h1 class="merry2"></h1>
+  <!-- oninput (eventlistener) -->
+    <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="movie" />
+    <div id="movies"></div>
+    <div id="merry"><div id="hello"></div></div>
+   
+  </body>
+  <script>
+      //serach movies
+          let apiKey = "14f97813";
+            var timerId;
+    async function searchMovies(movie_name)
+    {
+      try{
+       var res=await fetch(`http://www.omdbapi.com/?s=${movie_name}&apikey=${apiKey}`)
+      var data= await res.json();
+      //return the data is an array of objects
+      return data;
+      }catch(e)
+      {
+        console.log(e);
+      }
+    }
+    //  function clickEvent(movie){
+    //   console.log("movie",movie);
+      
+    // }
+    let movie_div=document.getElementById("movies")
+ function appendMovies(movies)
+    {
+      if(movies==="undefined")
+    {
+      return false
+    }//movies_div.innerhtml=null
+   
+    movies.forEach(function(movie){
+      let p=document.createElement("p")
+      p.id="ppp"
+     p.style.border="solid  black"
+
+      p.innerText=movie.Title;
+      movie_div.append(p)
+      // let btn=document.createElement("button");
+      // btn.addEventListener("click",function(){
+      //   clickEvent(movie)
+      // })
+            p.addEventListener("click",function(){
+                show_screen_data(movie);
+            })
+    });
+}
+let div=document.getElementById("hello")
+
+async function show_screen_data(movie)
+{ 
+          let hello=document.getElementById("hello")
+          console.log('movie',movie)
+          let p = document.createElement('p')
+          p.innerText = movie.Title
+          let img=document.createElement("img")
+          img.src=movie.Poster
+         let year=document.createElement("p")
+         year.innerText=movie.Year
+         console.log(movie.Year);
+          
+          hello.append(img,p,year)
+        //   console.log(movie);
+
+ 
+}
+
+    async function main()
+    {
+      let name=document.getElementById("movie").value;
+      //getsearch movies
+      if(name.length<3)
+      {
+        return false
+      }
+      // getting data from API
+      let res=await searchMovies(name);
+      // console.log(res);
+     let n=res.Search
+    // pass data to append to movies
+     appendMovies(n)
+   
+    
+    }
+ 
+    function debounce(func,delay)
+    {//debouncing orr throttling
+      //function=main()
+      //ave settimeout-func-main()-search("ave")
+      //aven-clear the prev timeout-settimeout-func-main()-search("aven")
+      if(timerId)
+ {clearTimeout(timerId)}//clearing time of prev execution
+      timerId=setTimeout(function(){
+        func() //main
+      },delay)
+
+    }
+    let data=JSON.parse(localStorage.getItem("data"))
+  
+    let h1=document.querySelector(".merry2")
+    h1.innerText=`welcome ${data}`;
+  </script>
+</html>
